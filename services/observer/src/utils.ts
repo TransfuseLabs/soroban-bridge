@@ -183,8 +183,8 @@ function base64ToText(base64: string): string | undefined {
 }
 
 function findMemoInEthTxData(input: string) {
-  // Find the index of the substring "IONIZE:"
-  const startIndex = input.indexOf("IONIZE:");
+  // Find the index of the substring "TRANSFUSE:"
+  const startIndex = input.indexOf("TRANSFUSE:");
 
   // If "IONIZE:" is found, extract the substring starting from the next character
   if (startIndex !== -1) {
