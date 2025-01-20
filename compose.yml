@@ -1,0 +1,109 @@
+version: "3"
+
+services:
+  stellar:
+    image: stellar/quickstart:testing
+    container_name: stellar
+    command: --standalone --enable-soroban-rpc --testnet
+    ports:
+      - "8000:8000"
+    volumes:
+      - stellar-data:/app
+  geth:
+    image: ethereum/client-go:v1.13.0
+    container_name: geth-sepolia
+    volumes:
+      - geth-data:/root/.ethereum
+      - ./secret:/secret
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+      - "30303:30303"
+      - "8551:8551"
+    command:
+      - --sepolia
+      - --syncmode=snap # https://geth.ethereum.org/docs/fundamentals/sync-modes
+      - --authrpc.addr=0.0.0.0
+      - --authrpc.port=8551
+      - --authrpc.jwtsecret=/secret/token.txt
+      - --authrpc.vhosts=*
+      - --http
+      - --http.api=eth,admin
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.vhosts=*
+  prysm_node:
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
+    command: [
+      "--sepolia",
+      "--datadir=/opt/prysm/data",
+      "--execution-endpoint=http://geth:8551",
+      "--jwt-secret=/secret/token.txt",
+      "--rpc-host=0.0.0.0",
+      "--grpc-gateway-host=0.0.0.0",
+      "--monitoring-host=0.0.0.0",
+      "--checkpoint-sync-url=https://sepolia.checkpoint-sync.ethpandaops.io",
+      "--genesis-beacon-api-url=https://sepolia.checkpoint-sync.ethpandaops.io",
+      "--accept-terms-of-use" ]
+    volumes:
+      - ./secret:/secret
+      - ./data/prysm:/opt/prysm/data
+    depends_on:
+      - geth
+    ports:
+      - "9000:9000/tcp"
+      - "9000:9000/udp"
+      - "5051:5051"
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 15671:15671
+      - 5672:5672
+    environment:
+      RABBITMQ_DEFAULT_USER: user  
+      RABBITMQ_DEFAULT_PASS: password 
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbitmq:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5    
+  ionize-observer:
+    image: ionizedman/ionize-observer
+    restart: on-failure
+    container_name: ionize-observer
+    volumes:
+      - observer-data:/app
+    depends_on:
+      - stellar
+      - rabbitmq
+    links:
+      - stellar
+      - rabbitmq
+    env_file:
+      - .env
+  ionize-core:
+    image: ionizedman/ionize-core
+    restart: on-failure
+    container_name: ionize-core
+    ports:
+      - "8080:8080"
+      - "3000:3000"
+    volumes:
+      - core-data:/app
+    depends_on:
+      - stellar
+      - rabbitmq
+    links:
+      - stellar
+      - rabbitmq
+    env_file:
+      - .env
+volumes:
+  stellar-data: {}
+  observer-data: {}
+  core-data: {}
+  rabbitmq_data: {}
+  geth-data: {}

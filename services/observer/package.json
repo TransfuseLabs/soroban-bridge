@@ -1,0 +1,34 @@
+{
+  "name": "observer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/observer.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "tsc && node dist/observer.js",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/amqplib": "^0.10.4",
+    "@types/eventsource": "^1.1.15",
+    "ethers": "^6.11.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/ws": "^8.5.10",
+    "abi-decoder": "^2.4.0",
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.4.1",
+    "erc-20-abi": "^1.0.1",
+    "eventsource": "^2.0.2",
+    "web3": "^4.4.0",
+    "ws": "^8.16.0"
+  }
+}

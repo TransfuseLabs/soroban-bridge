@@ -1,0 +1,44 @@
+{
+  "name": "core",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/core.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node dist/core.js",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/amqplib": "^0.10.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@quicknode/sdk": "^2.1.1",
+    "@types/urijs": "^1.19.25",
+    "@types/ws": "^8.5.10",
+    "amqplib": "^0.10.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "erc-20-abi": "^1.0.1",
+    "express": "^4.18.2",
+    "json-schema": "^0.4.0",
+    "sqlite3": "^5.1.7",
+    "stellar-sdk": "github:stellar/js-stellar-sdk#e998df75d23d121b869c3bf0b237f4d710780d61",
+    "web3": "^4.4.0",
+    "ws": "^8.16.0"
+  }
+}
